@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Task Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TaskFlow</h1>
+            <p>Manage your tasks efficiently</p>
+        </header>
+
+        <main>
+            <section class="task-input">
+                <input type="text" id="taskInput" placeholder="Enter a new task..." />
+                <select id="prioritySelect">
+                    <option value="low">Low Priority</option>
+                    <option value="medium" selected>Medium Priority</option>
+                    <option value="high">High Priority</option>
+                </select>
+                <button id="addTaskBtn">Add Task</button>
+            </section>
+
+            <section class="task-filters">
+                <button class="filter-btn active" data-filter="all">All Tasks</button>
+                <button class="filter-btn" data-filter="todo">To Do</button>
+                <button class="filter-btn" data-filter="progress">In Progress</button>
+                <button class="filter-btn" data-filter="done">Done</button>
+            </section>
+
+            <section class="task-list">
+                <div class="column" id="todoColumn">
+                    <h3>To Do</h3>
+                    <div class="tasks" id="todoTasks"></div>
+                </div>
+                <div class="column" id="progressColumn">
+                    <h3>In Progress</h3>
+                    <div class="tasks" id="progressTasks"></div>
+                </div>
+                <div class="column" id="doneColumn">
+                    <h3>Done</h3>
+                    <div class="tasks" id="doneTasks"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
