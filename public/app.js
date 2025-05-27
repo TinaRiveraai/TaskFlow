@@ -28,10 +28,14 @@ class TaskFlow {
     async loadTasks() {
         try {
             const response = await fetch('/api/tasks');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             this.tasks = await response.json();
             this.renderTasks();
         } catch (error) {
             console.error('Failed to load tasks:', error);
+            this.showError('Failed to load tasks. Please refresh the page.');
         }
     }
 
@@ -64,6 +68,7 @@ class TaskFlow {
             }
         } catch (error) {
             console.error('Failed to add task:', error);
+            this.showError('Failed to add task. Please try again.');
         }
     }
 
@@ -198,6 +203,34 @@ class TaskFlow {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    showError(message) {
+        // Create error notification
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-notification';
+        errorDiv.textContent = message;
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+            z-index: 1000;
+            font-weight: 500;
+        `;
+        
+        document.body.appendChild(errorDiv);
+        
+        // Remove after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.parentNode.removeChild(errorDiv);
+            }
+        }, 5000);
     }
 }
 
