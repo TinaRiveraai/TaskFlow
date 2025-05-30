@@ -2,6 +2,7 @@ class TaskFlow {
     constructor() {
         this.tasks = [];
         this.currentFilter = 'all';
+        this.searchQuery = '';
         this.init();
     }
 
@@ -13,12 +14,17 @@ class TaskFlow {
     bindEvents() {
         const addBtn = document.getElementById('addTaskBtn');
         const taskInput = document.getElementById('taskInput');
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
         const filterBtns = document.querySelectorAll('.filter-btn');
 
         addBtn.addEventListener('click', () => this.addTask());
         taskInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.addTask();
         });
+
+        searchInput.addEventListener('input', (e) => this.setSearchQuery(e.target.value));
+        clearSearchBtn.addEventListener('click', () => this.clearSearch());
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', (e) => this.setFilter(e.target.dataset.filter));
@@ -122,15 +128,39 @@ class TaskFlow {
     }
 
     getFilteredTasks() {
-        if (this.currentFilter === 'all') return this.tasks;
-        return this.tasks.filter(task => {
+        let filtered = this.tasks;
+        
+        // Apply status filter
+        if (this.currentFilter !== 'all') {
             const statusMap = {
                 'todo': 'todo',
                 'progress': 'progress',
                 'done': 'done'
             };
-            return task.status === statusMap[this.currentFilter];
-        });
+            filtered = filtered.filter(task => task.status === statusMap[this.currentFilter]);
+        }
+        
+        // Apply search filter
+        if (this.searchQuery) {
+            const query = this.searchQuery.toLowerCase();
+            filtered = filtered.filter(task => 
+                task.title.toLowerCase().includes(query)
+            );
+        }
+        
+        return filtered;
+    }
+
+    setSearchQuery(query) {
+        this.searchQuery = query.trim();
+        this.renderTasks();
+    }
+
+    clearSearch() {
+        const searchInput = document.getElementById('searchInput');
+        searchInput.value = '';
+        this.searchQuery = '';
+        this.renderTasks();
     }
 
     renderTasks() {
